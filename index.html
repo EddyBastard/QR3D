@@ -39,7 +39,7 @@ input[type=color]{width:54px;height:40px;border:1px solid var(--l);border-radius
 .cols{display:flex;gap:18px;flex-wrap:wrap}
 #qr{display:flex;justify-content:center}#qr canvas{width:100%;height:auto;max-width:260px;border-radius:8px}
 #v3{height:300px;position:relative;border-radius:12px;background:var(--bg);margin-top:12px}#v3 canvas{display:block}
-#v3msg{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:16px;color:var(--m);font-size:.9rem}
+#v3msg[hidden]{display:none!important}#v3msg{pointer-events:none;position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:16px;color:var(--m);font-size:.9rem}
 .hint{font-size:.8rem;color:var(--m);text-align:center;margin:4px 0 10px}
 #warn p{margin:6px 0;font-size:.85rem}.ok{color:var(--ok)}.mid{color:var(--mid)}.bad{color:var(--bad)}
 .dl{display:grid;gap:8px;margin-top:8px}.dl .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -218,11 +218,11 @@ async function init3(){if(started)return;started=1;const v=$('#v3');
   el.onpointermove=e=>{if(!dr)return;pv.rotation.y+=(e.clientX-dr[0])*.01;pv.rotation.x=Math.max(-1.5,Math.min(1.5,pv.rotation.x+(e.clientY-dr[1])*.01));dr=[e.clientX,e.clientY];dirty=1};
   el.onpointerup=el.onpointercancel=()=>{dr=null};
   el.onwheel=e=>{e.preventDefault();cam.position.z*=e.deltaY>0?1.08:.92;dirty=1};
-  new ResizeObserver(size3).observe(v);size3();$('#v3msg').hidden=true;
+  new ResizeObserver(size3).observe(v);size3();$('#v3msg').hidden=true;vis=1;
   (function loop(){if(dirty&&vis&&!document.hidden){R.render(sc,cam);dirty=0}requestAnimationFrame(loop)})();
   if(S.m)show3(S.m)}
  catch(e){$('#v3msg').textContent='Tu navegador no puede mostrar la vista 3D, pero las descargas funcionan igual.'}}
-function show3(m){if(!R)return;[...inn.children].forEach(o=>{o.geometry.dispose();inn.remove(o)});
+function show3(m){if(!R)return;$('#v3msg').hidden=true;[...inn.children].forEach(o=>{o.geometry.dispose();inn.remove(o)});
  const mk=(a,mt)=>{const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(new Float32Array(a),3));g.computeVertexNormals();return new THREE.Mesh(g,mt)};
  const b=mk(m.bs,mB),r=mk(m.rl,mR),c=m.mn.map((x,i)=>(x+m.mx[i])/2);b.position.set(-c[0],-c[1],-c[2]);r.position.copy(b.position);inn.add(b,r);
  if(m.fmt!==lastF){lastF=m.fmt;const sz=Math.max(m.mx[0]-m.mn[0],m.mx[1]-m.mn[1],m.mx[2]-m.mn[2]),s=m.fmt==='soporte';
@@ -231,7 +231,7 @@ function show3(m){if(!R)return;[...inn.children].forEach(o=>{o.geometry.dispose(
 /* ---------- orquestación ---------- */
 let tm,pend,gen=0;
 function go(full){pend=pend||full;clearTimeout(tm);tm=setTimeout(async()=>{const f=pend;pend=0;safe(draw2d);col3();warn();if(!f&&S.m)return;const g=++gen;
- try{const m=await model();if(g!==gen)return;S.m=m;show3(m)}catch(e){console.error(e)}},130)}
+ try{const m=await model();if(g!==gen)return;S.m=m;show3(m)}catch(e){console.error(e);if(!R)return;$('#v3msg').hidden=false;$('#v3msg').textContent='No se pudo generar el modelo 3D. Prueba con un enlace más corto.'}},130)}
 async function ctr(src){S.img=S.sil='';
  if(src)try{const im=new Image();im.src=src;await im.decode();const k=160/Math.max(im.width,im.height),w=Math.max(1,Math.round(im.width*k)),h=Math.max(1,Math.round(im.height*k)),c=document.createElement('canvas');c.width=w;c.height=h;
   const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(im,0,0,w,h);const d=x.getImageData(0,0,w,h),o=x.createImageData(w,h);let tr=0;
