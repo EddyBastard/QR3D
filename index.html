@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Código QR para imprimir en 3D gratis | QR3D</title>
+<meta name="description" content="Crea un QR para imprimir en 3D: llavero, soporte de mesa o placa. Elige 2 colores y descarga en 3MF (o STL). Gratis, sin registro y privado.">
+<meta property="og:title" content="Código QR para imprimir en 3D: llavero, soporte y placa">
+<meta property="og:description" content="Genera tu QR 3D a dos colores y descárgalo en 3MF listo para tu impresora.">
+<!-- TODO: añade <link rel="canonical" href="https://TU-DOMINIO/"> y og:image al publicar -->
+<!-- TODO: banner de cookies / CMP cuando actives anuncios reales -->
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"QR3D","description":"Generador de códigos QR para imprimir en 3D en formato 3MF y STL","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"es","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Qué es un código QR para imprimir en 3D?","acceptedAnswer":{"@type":"Answer","text":"Es un QR en relieve sobre una base: un llavero, un soporte de mesa o una placa de pared que escanea cualquier móvil."}},
+{"@type":"Question","name":"¿Por qué 3MF y no STL?","acceptedAnswer":{"@type":"Answer","text":"El 3MF guarda los dos colores dentro del archivo y tu programa de impresión los asigna solo. El STL no lleva color."}},
+{"@type":"Question","name":"¿Qué tamaño necesita el QR para que se lea?","acceptedAnswer":{"@type":"Answer","text":"Cada cuadradito debería medir al menos 1,5 mm. Con enlaces cortos el QR es más simple y el cuadradito más grande."}},
+{"@type":"Question","name":"¿Qué colores elijo para que escanee?","acceptedAnswer":{"@type":"Answer","text":"Base clara y código oscuro, con mucho contraste. La herramienta te avisa si el contraste es bajo."}},
+{"@type":"Question","name":"¿Cómo imprimo a dos colores?","acceptedAnswer":{"@type":"Answer","text":"Abre el 3MF en Bambu Studio, OrcaSlicer o PrusaSlicer: cada parte ya viene con su color. Asigna un filamento a cada una."}},
+{"@type":"Question","name":"¿Es gratis y privado?","acceptedAnswer":{"@type":"Answer","text":"Sí. Todo se genera en tu navegador y tu enlace no se envía a ningún servidor."}}]}</script>
+<style>
+:root{--bg:#f6f6f3;--c:#fff;--t:#16161d;--m:#5f6270;--l:#dcdde3;--a:#5b3df5;--ai:#fff;--ok:#1a7f4b;--mid:#9a6a00;--bad:#c2331f;box-sizing:border-box;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#101015;--c:#191a22;--t:#f1f1f5;--m:#a0a3b3;--l:#2c2e3a;--a:#8b78ff;--ai:#10101a;--ok:#4cc38a;--mid:#e0b04a;--bad:#ff7b66}}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--t);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.w{max-width:1080px;margin:0 auto;padding:0 16px}
+header{padding:14px 0}.logo{font-weight:800;font-size:1.2rem;letter-spacing:-.02em}
+h1{font-size:clamp(1.6rem,4.5vw,2.5rem);line-height:1.15;margin:.3em 0 .2em;letter-spacing:-.02em}
+h2{font-size:1.5rem;margin:1.6em 0 .6em}.sub{color:var(--m);margin:0 0 16px}
+.card{background:var(--c);border:1px solid var(--l);border-radius:16px;padding:16px}
+.tool{display:grid;gap:18px}@media(min-width:860px){.tool{grid-template-columns:1fr 1fr;padding:22px}}
+label,.lb{display:block;font-weight:600;font-size:.85rem;margin:14px 0 6px}.lb:first-child{margin-top:0}
+input[type=text]{width:100%;padding:11px 12px;border:1px solid var(--l);border-radius:10px;background:var(--bg);color:var(--t);font:inherit}
+input[type=color]{width:54px;height:40px;border:1px solid var(--l);border-radius:8px;background:none;padding:2px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button,.btn{font:inherit;border:1px solid var(--l);background:var(--bg);color:var(--t);border-radius:10px;padding:8px 12px;cursor:pointer}
+.seg button[aria-pressed=true]{border-color:var(--a);background:var(--a);color:var(--ai)}
+.seg .e{font-size:1.2rem;padding:4px 9px}
+.btn.p{background:var(--a);color:var(--ai);border-color:var(--a);font-weight:700;padding:12px 16px;width:100%;font-size:1.02rem}
+.cols{display:flex;gap:18px;flex-wrap:wrap}
+#qr{display:flex;justify-content:center}#qr canvas{width:100%;height:auto;max-width:260px;border-radius:8px}
+#v3{height:300px;position:relative;border-radius:12px;background:var(--bg);margin-top:12px}#v3 canvas{display:block}
+#v3msg{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:16px;color:var(--m);font-size:.9rem}
+.hint{font-size:.8rem;color:var(--m);text-align:center;margin:4px 0 10px}
+#warn p{margin:6px 0;font-size:.85rem}.ok{color:var(--ok)}.mid{color:var(--mid)}.bad{color:var(--bad)}
+.dl{display:grid;gap:8px;margin-top:8px}.dl .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.lnk{background:none;border:0;color:var(--m);text-decoration:underline;cursor:pointer;font:inherit;font-size:.85rem;padding:4px}
+.pr{font-size:.85rem;color:var(--m);margin:10px 0}
+.ad{min-height:90px;border:2px dashed var(--l);border-radius:10px;display:grid;place-items:center;color:var(--m);font-size:.8rem;letter-spacing:.08em;margin:18px 0;text-align:center;padding:8px}
+.steps,.ideas{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.steps .card b{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--a);color:var(--ai);margin-bottom:6px}
+.ideas .card{font-size:.95rem}.ideas .card span{font-size:1.6rem;display:block}
+details{background:var(--c);border:1px solid var(--l);border-radius:12px;padding:12px 14px;margin:8px 0}summary{font-weight:600;cursor:pointer}details p{margin:8px 0 0;color:var(--m)}
+footer{color:var(--m);font-size:.85rem;padding:30px 0}
+dialog{border:1px solid var(--l);border-radius:16px;background:var(--c);color:var(--t);max-width:360px;width:calc(100% - 32px);padding:18px;position:relative}dialog::backdrop{background:#0009}
+.x{position:absolute;top:6px;right:8px;border:0;background:none;color:var(--t);font-size:1.5rem;cursor:pointer;line-height:1}
+#toast{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));width:260px;background:var(--c);border:1px solid var(--l);border-radius:12px;padding:12px 28px 12px 12px;font-size:.8rem;color:var(--m);box-shadow:0 6px 24px #0003;z-index:5}#toast[hidden]{display:none}
+</style>
+</head>
+<body>
+<header class="w"><span class="logo">▣ QR3D</span></header>
+<main class="w">
+<h1>Código QR para imprimir en 3D</h1>
+<p class="sub">Pega tu enlace, elige 2 colores y descarga un llavero, soporte de mesa o placa en 3MF. Gratis y sin registro.</p>
+
+<section class="card tool" id="tool">
+<noscript><p>Esta herramienta necesita JavaScript.</p></noscript>
+<div>
+ <div class="lb">¿Qué quieres que abra el QR?</div>
+ <div class="seg" id="kind"><button data-k="url" aria-pressed="true">Enlace</button><button data-k="wifi" aria-pressed="false">Wifi</button></div>
+ <div id="fu"><label for="url" class="lb">Pega tu enlace (carta, reseñas, Instagram, web…)</label>
+ <input id="url" type="text" inputmode="url" placeholder="https://tu-restaurante.com/carta" autocomplete="off"></div>
+ <div id="fw" hidden><label for="ssid" class="lb">Nombre de la wifi</label><input id="ssid" type="text" autocomplete="off">
+ <label for="pass" class="lb">Contraseña</label><input id="pass" type="text" autocomplete="off"></div>
+ <div class="lb">Forma de los puntos</div>
+ <div class="seg" id="sty"><button data-s="clasico" aria-pressed="true">Clásico</button><button data-s="redondeado" aria-pressed="false">Redondeado</button><button data-s="puntos" aria-pressed="false">Puntos</button><button data-s="elegante" aria-pressed="false">Elegante</button></div>
+ <div class="lb">Emoji o logo en el centro</div>
+ <div class="seg" id="emj"><button data-e="" aria-pressed="true">Ninguno</button><button class="e" data-e="☕" aria-pressed="false">☕</button><button class="e" data-e="🍽️" aria-pressed="false">🍽️</button><button class="e" data-e="⭐" aria-pressed="false">⭐</button><button class="e" data-e="📶" aria-pressed="false">📶</button><button class="e" data-e="📍" aria-pressed="false">📍</button><button class="e" data-e="📸" aria-pressed="false">📸</button></div>
+ <div class="cols" style="margin-top:8px"><div style="flex:1;min-width:120px"><input id="emo" type="text" maxlength="4" placeholder="Otro emoji" aria-label="Otro emoji"></div><button class="btn" id="lgb" type="button">Subir logo</button><input id="lgf" type="file" accept="image/*" hidden></div>
+ <div class="lb">Objeto 3D</div>
+ <div class="seg" id="fmt"><button data-f="soporte" aria-pressed="true">Soporte de mesa</button><button data-f="llavero" aria-pressed="false">Llavero</button><button data-f="placa" aria-pressed="false">Placa de pared</button></div>
+ <label for="txt" class="lb">Texto corto (opcional)</label>
+ <input id="txt" type="text" maxlength="24" placeholder="Nombre de tu negocio" autocomplete="off">
+ <div class="cols"><div><div class="lb">Color de la base</div><input id="c1" type="color" value="#f2f1ec" aria-label="Color de la base"></div><div><div class="lb">Color del QR y texto</div><input id="c2" type="color" value="#1b1b22" aria-label="Color del QR y texto"></div></div>
+</div>
+<div>
+ <div id="qr" aria-label="Vista previa del QR"></div>
+ <div id="v3"><div id="v3msg">Preparando la vista 3D…</div></div>
+ <p class="hint">Arrastra para girar · rueda o pellizco para acercar</p>
+ <div id="warn" aria-live="polite"></div>
+ <div class="dl">
+  <button class="btn p" id="d3mf" type="button">Descargar 3MF (2 colores) para imprimir</button>
+  <div class="row"><button class="btn" id="dpng" type="button">PNG</button><button class="btn" id="dsvg" type="button">SVG</button></div>
+  <button class="lnk" id="dstl" type="button">STL para impresoras antiguas (2 archivos en .zip)</button>
+ </div>
+</div>
+</section>
+<p class="pr">🔒 100 % privado: todo se genera en tu navegador y tu enlace no se sube a ningún servidor. Relieve de 1,2 mm.</p>
+<div class="ad" id="ad1"><!-- PEGA AQUÍ TU CÓDIGO DE ADSENSE (banner horizontal) -->ANUNCIO · banner horizontal 728×90</div>
+
+<h2>Cómo funciona</h2>
+<div class="steps">
+<div class="card"><b>1</b><br><strong>Pega tu enlace</strong><br>Carta, reseñas de Google, Instagram, wifi o tu web. Cuanto más corto, más fácil de imprimir.</div>
+<div class="card"><b>2</b><br><strong>Diseña y elige objeto</strong><br>Forma de los puntos, emoji o logo, texto y dos colores. Giras el modelo 3D antes de descargar.</div>
+<div class="card"><b>3</b><br><strong>Descarga el 3MF e imprime</strong><br>Ábrelo en tu programa de impresión: cada parte ya sale con su color.</div>
+</div>
+
+<h2>Ideas para tu QR 3D</h2>
+<div class="ideas">
+<div class="card"><span>🍽️</span><strong>Carta de restaurante</strong><br>Soporte de mesa con la carta digital.</div>
+<div class="card"><span>⭐</span><strong>Reseñas de Google</strong><br>Un «déjanos tu opinión» en el mostrador.</div>
+<div class="card"><span>🔑</span><strong>Llaveros para eventos</strong><br>Regalo con tu web o tu perfil.</div>
+<div class="card"><span>📶</span><strong>Wifi para alojamientos</strong><br>Placa para la habitación o la recepción.</div>
+<div class="card"><span>📸</span><strong>Instagram del local</strong><br>QR en el escaparate o en la caja.</div>
+<div class="card"><span>🏷️</span><strong>Ferias y mercadillos</strong><br>Tu tienda online en el puesto.</div>
+</div>
+<div class="ad" id="ad2"><!-- PEGA AQUÍ TU CÓDIGO DE ADSENSE (en el contenido) -->ANUNCIO · en mitad del contenido 300×250</div>
+
+<h2>Preguntas frecuentes</h2>
+<details><summary>¿Qué es un código QR para imprimir en 3D?</summary><p>Es un QR en relieve sobre una base: un llavero, un soporte de mesa o una placa de pared que escanea cualquier móvil.</p></details>
+<details><summary>¿Por qué 3MF y no STL?</summary><p>El 3MF guarda los dos colores dentro del archivo y tu programa de impresión los asigna solo. El STL no lleva color, por eso va como opción secundaria.</p></details>
+<details><summary>¿Qué tamaño necesita el QR para que se lea?</summary><p>Cada cuadradito debería medir al menos 1,5 mm. Con enlaces cortos el QR es más simple y el cuadradito más grande; la herramienta te muestra la medida en vivo.</p></details>
+<details><summary>¿Qué colores elijo para que escanee?</summary><p>Base clara y código oscuro, con mucho contraste. La herramienta te avisa si el contraste es bajo o si el QR queda invertido.</p></details>
+<details><summary>¿Cómo imprimo a dos colores?</summary><p>Abre el 3MF en Bambu Studio, OrcaSlicer o PrusaSlicer: cada parte ya viene con su color. Asigna un filamento a cada una (o cambia de filamento en la capa del relieve).</p></details>
+<details><summary>¿Es gratis y privado?</summary><p>Sí. Todo se genera en tu navegador y tu enlace no se envía a ningún servidor.</p></details>
+</main>
+<footer class="w">© QR3D · <a href="#" data-todo="privacidad">Privacidad</a> · <a href="#" data-todo="aviso-legal">Aviso legal</a><!-- TODO: crear privacidad.html y aviso-legal.html (requisito de AdSense) --></footer>
+
+<dialog id="pop"><button class="x" id="pox" aria-label="Cerrar">×</button><div class="ad" style="min-height:200px;margin-top:14px"><!-- PEGA AQUÍ TU CÓDIGO DE ADSENSE (pop-up) -->ANUNCIO · ventana emergente 300×250</div><button class="btn" id="poc" type="button" style="width:100%">Cerrar y seguir</button></dialog>
+<aside id="toast" hidden><button class="x" id="tox" aria-label="Cerrar">×</button><strong>ANUNCIO</strong><br>Notificación pequeña en la esquina</aside>
+
+<script defer src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.9.2/lib/qr-code-styling.js"></script>
+<script defer>
+(()=>{
+const $=s=>document.querySelector(s),safe=f=>{try{return f()}catch(e){console.error(e)}};
+const S={k:'url',style:'clasico',fmt:'soporte',c1:'#f2f1ec',c2:'#1b1b22',img:'',sil:'',n:25,m:null};
+const ST={clasico:['square','square','square'],redondeado:['rounded','extra-rounded','dot'],puntos:['dots','dot','dot'],elegante:['classy-rounded','extra-rounded','square']};
+const F={soporte:{W:80,H:86,qr:62,top:5,tb:3},llavero:{W:46,H:60,qr:36,top:12,tb:3,h:[[23,6,2.6]]},placa:{W:84,H:102,qr:70,top:14,tb:3.2,h:[[7,6,2.2],[77,6,2.2]]}};
+function payload(){if(S.k==='wifi'){const e=s=>s.replace(/([\\;,:"])/g,'\\$1');return 'WIFI:T:WPA;S:'+e($('#ssid').value)+';P:'+e($('#pass').value)+';;'}
+ let u=$('#url').value.trim()||'https://ejemplo.com';if(!/^[a-z][a-z0-9+.-]*:/i.test(u))u='https://'+u;return u}
+function opts(px,type,bw){const[d,c,cd]=ST[S.style],fg=bw?'#000':S.c2,bg=bw?'#fff':S.c1,im=bw?S.sil:S.img;
+ return{width:px,height:px,type,data:payload(),margin:bw?0:Math.round(px/22),qrOptions:{errorCorrectionLevel:im?'H':'M'},dotsOptions:{type:d,color:fg},cornersSquareOptions:{type:c,color:fg},cornersDotOptions:{type:cd,color:fg},backgroundOptions:{color:bg},image:im||undefined,imageOptions:{hideBackgroundDots:true,imageSize:.3,margin:1}}}
+/* ---------- geometría ---------- */
+const FI=[[0,3,2],[0,2,1],[4,5,6],[4,6,7],[0,1,5],[0,5,4],[1,2,6],[1,6,5],[2,3,7],[2,7,6],[3,0,4],[3,4,7]];
+function hex(o,p){for(const t of FI)for(const i of t)o.push(p[i][0],p[i][1],p[i][2])}
+function rects(on,cols,rows,cell,x0,vT){const used=new Uint8Array(cols*rows),out=[];
+ for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){if(used[r*cols+c]||!on(r,c))continue;let w=1;while(c+w<cols&&!used[r*cols+c+w]&&on(r,c+w))w++;
+  let h=1;g:while(r+h<rows){for(let k=0;k<w;k++)if(used[(r+h)*cols+c+k]||!on(r+h,c+k))break g;h++}
+  for(let i=r;i<r+h;i++)for(let j=c;j<c+w;j++)used[i*cols+j]=1;out.push({u0:x0+c*cell,u1:x0+(c+w)*cell,v0:vT-(r+h)*cell,v1:vT-r*cell})}return out}
+async function model(){
+ const f=F[S.fmt],n=S.n,k=8,rh=1.2,sink=.15,cell=.4,N=n*k;
+ const bm=await createImageBitmap(await new QRCodeStyling(opts(N,'canvas',1)).getRawData('png'));
+ const cv=document.createElement('canvas');cv.width=cv.height=N;const cx=cv.getContext('2d',{willReadFrequently:true});cx.drawImage(bm,0,0);
+ const px=cx.getImageData(0,0,N,N).data;
+ const q=rects((r,c)=>px[(r*N+c)*4]<128,N,N,f.qr/N,(f.W-f.qr)/2,f.H-f.top);
+ let t=[];const txt=$('#txt').value.trim();
+ if(txt){const zh=f.H-f.top-f.qr-5,cols=Math.round((f.W-10)/cell),rows=Math.round(zh/cell),c=document.createElement('canvas');c.width=cols;c.height=rows;
+  const x=c.getContext('2d',{willReadFrequently:true});let fs=rows*.9;const ft=s=>`700 ${s}px system-ui,Arial,sans-serif`;x.font=ft(fs);const w=x.measureText(txt).width;if(w>cols){fs*=cols/w;x.font=ft(fs)}
+  x.textAlign='center';x.textBaseline='middle';x.fillText(txt,cols/2,rows/2);const d=x.getImageData(0,0,cols,rows).data;t=rects((r,c)=>d[(r*cols+c)*4+3]>110,cols,rows,cell,5,3+zh)}
+ const bs=[],rl=[];let M;
+ if(S.fmt==='soporte'){const a=40*Math.PI/180,c=Math.cos(a),s=Math.sin(a),tt=f.tb,D=f.H*c,Hs=f.H*s,W=f.W;
+  M=(u,v,h)=>[u,v*c-h*s,tt+v*s+h*c];
+  hex(bs,[[0,0,0],[W,0,0],[W,D,0],[0,D,0],[0,0,tt],[W,0,tt],[W,D,tt+Hs],[0,D,tt+Hs]])}
+ else{M=(u,v,h)=>[u,v,f.tb+h];const cols=Math.round(f.W/cell),rows=Math.round(f.H/cell),R=3;
+  const inside=(r,c)=>{const x=(c+.5)*cell,y=f.H-(r+.5)*cell,dx=Math.max(R-x,0,x-(f.W-R)),dy=Math.max(R-y,0,y-(f.H-R));if(dx*dx+dy*dy>R*R)return 0;
+   for(const[hx,ht,hr]of f.h)if((x-hx)**2+(y-(f.H-ht))**2<hr*hr)return 0;return 1};
+  for(const r of rects(inside,cols,rows,cell,0,f.H))bx(bs,r,-f.tb,0)}
+ function bx(o,r,h0,h1){const e=o===rl?.01:0,u0=r.u0-e,u1=r.u1+e,v0=r.v0-e,v1=r.v1+e;
+  hex(o,[[u0,v0,h0],[u1,v0,h0],[u1,v1,h0],[u0,v1,h0],[u0,v0,h1],[u1,v0,h1],[u1,v1,h1],[u0,v1,h1]].map(p=>M(p[0],p[1],p[2])))}
+ for(const r of q.concat(t))bx(rl,r,-sink,rh);
+ const mn=[1e9,1e9,1e9],mx=[-1e9,-1e9,-1e9];
+ for(const a of[bs,rl])for(let i=0;i<a.length;i++){const j=i%3;if(a[i]<mn[j])mn[j]=a[i];if(a[i]>mx[j])mx[j]=a[i]}
+ return{bs,rl,mn,mx,fmt:S.fmt}}
+/* ---------- zip, 3MF, STL ---------- */
+const CT=(()=>{const t=[];for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+const crc=b=>{let c=-1;for(let i=0;i<b.length;i++)c=CT[(c^b[i])&255]^(c>>>8);return(~c)>>>0};
+function zip(files){const E=new TextEncoder(),P=[],C=[];let off=0;
+ for(const f of files){const n=E.encode(f.n),c=crc(f.d),L=f.d.length,h=new DataView(new ArrayBuffer(30));
+  h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x0800,true);h.setUint16(12,0x21,true);h.setUint32(14,c,true);h.setUint32(18,L,true);h.setUint32(22,L,true);h.setUint16(26,n.length,true);P.push(h.buffer,n,f.d);
+  const g=new DataView(new ArrayBuffer(46));g.setUint32(0,0x02014b50,true);g.setUint16(4,20,true);g.setUint16(6,20,true);g.setUint16(8,0x0800,true);g.setUint16(14,0x21,true);g.setUint32(16,c,true);g.setUint32(20,L,true);g.setUint32(24,L,true);g.setUint16(28,n.length,true);g.setUint32(42,off,true);C.push(g.buffer,n);off+=30+n.length+L}
+ const cs=C.reduce((s,b)=>s+b.byteLength,0),e=new DataView(new ArrayBuffer(22));e.setUint32(0,0x06054b50,true);e.setUint16(8,files.length,true);e.setUint16(10,files.length,true);e.setUint32(12,cs,true);e.setUint32(16,off,true);
+ return new Blob([...P,...C,e.buffer])}
+function mesh(tr,mn){const m=new Map(),V=[],T=[],id=(x,y,z)=>{const a=Math.round((x-mn[0])*1e3),b=Math.round((y-mn[1])*1e3),c=Math.round((z-mn[2])*1e3),k=a+','+b+','+c;let i=m.get(k);if(i===undefined){i=V.length;V.push('<vertex x="'+a/1e3+'" y="'+b/1e3+'" z="'+c/1e3+'"/>');m.set(k,i)}return i};
+ for(let i=0;i<tr.length;i+=9){const a=id(tr[i],tr[i+1],tr[i+2]),b=id(tr[i+3],tr[i+4],tr[i+5]),c=id(tr[i+6],tr[i+7],tr[i+8]);if(a!==b&&b!==c&&a!==c)T.push('<triangle v1="'+a+'" v2="'+b+'" v3="'+c+'"/>')}
+ return'<mesh><vertices>'+V.join('')+'</vertices><triangles>'+T.join('')+'</triangles></mesh>'}
+function to3mf(m){const E=new TextEncoder(),col=h=>h.toUpperCase()+'FF';
+ const x='<?xml version="1.0" encoding="UTF-8"?><model unit="millimeter" xml:lang="es-ES" xmlns="http://schemas.microsoft.com/3dmanufacturing/core/2015/02"><resources><basematerials id="1"><base name="Base" displaycolor="'+col(S.c1)+'"/><base name="Codigo" displaycolor="'+col(S.c2)+'"/></basematerials><object id="2" type="model" pid="1" pindex="0">'+mesh(m.bs,m.mn)+'</object><object id="3" type="model" pid="1" pindex="1">'+mesh(m.rl,m.mn)+'</object></resources><build><item objectid="2"/><item objectid="3"/></build></model>';
+ return zip([{n:'[Content_Types].xml',d:E.encode('<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="model" ContentType="application/vnd.ms-package.3dmanufacturing-3dmodel+xml"/></Types>')},
+  {n:'_rels/.rels',d:E.encode('<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Target="/3D/3dmodel.model" Id="rel0" Type="http://schemas.microsoft.com/3dmanufacturing/2013/01/3dmodel"/></Relationships>')},
+  {n:'3D/3dmodel.model',d:E.encode(x)}])}
+function stl(tr,mn){const n=tr.length/9,b=new DataView(new ArrayBuffer(84+n*50));b.setUint32(80,n,true);let o=84;
+ for(let i=0;i<n;i++){const p=[];for(let j=0;j<9;j++)p.push(tr[i*9+j]-mn[j%3]);const ux=p[3]-p[0],uy=p[4]-p[1],uz=p[5]-p[2],vx=p[6]-p[0],vy=p[7]-p[1],vz=p[8]-p[2];
+  let nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx;const l=Math.hypot(nx,ny,nz)||1;[nx/l,ny/l,nz/l,...p].forEach((v,j)=>b.setFloat32(o+j*4,v,true));o+=50}
+ return new Uint8Array(b.buffer)}
+/* ---------- vista previa 2D ---------- */
+let qr;
+function draw2d(){if(!window.QRCodeStyling)return;const o=opts(300,'canvas');if(!qr){qr=new QRCodeStyling(o);qr.append($('#qr'))}else qr.update(o);
+ const n=qr._qr&&qr._qr.getModuleCount&&qr._qr.getModuleCount();if(n)S.n=n}
+const lum=h=>{const c=[1,3,5].map(i=>{const v=parseInt(h.substr(i,2),16)/255;return v<=.03928?v/12.92:((v+.055)/1.055)**2.4});return .2126*c[0]+.7152*c[1]+.0722*c[2]};
+function warn(){const f=F[S.fmt],mm=f.qr/S.n,a=lum(S.c1),b=lum(S.c2),r=(Math.max(a,b)+.05)/(Math.min(a,b)+.05),w=[];
+ if(r<3)w.push(['bad','Contraste bajo ('+r.toFixed(1).replace('.',',')+':1): el QR no se leerá bien. Usa una base clara y un código oscuro.']);
+ else if(b>a)w.push(['mid','El código es más claro que la base (QR invertido): casi todos los móviles lo leen, algunos antiguos no.']);
+ w.push([mm<1.5?'bad':'ok','Cada cuadradito del QR mide '+mm.toFixed(1).replace('.',',')+' mm'+(mm<1.5?': demasiado pequeño, la impresora lo emborronará. Acorta el enlace o elige un formato más grande.':' (mínimo recomendado: 1,5 mm).')]);
+ if(S.img)w.push(['mid','Con logo o emoji en el centro, escanea una prueba antes de imprimir varias unidades.']);
+ $('#warn').innerHTML=w.map(x=>'<p class="'+x[0]+'">'+x[1]+'</p>').join('')}
+/* ---------- vista previa 3D (three.js r128, carga diferida) ---------- */
+let R,sc,cam,pv,inn,mB,mR,lastF,dirty,vis,started;
+function size3(){const v=$('#v3'),w=v.clientWidth,h=v.clientHeight;if(!R||!w||!h||!innerHeight)return;R.setSize(w,h);cam.aspect=w/h;cam.updateProjectionMatrix();dirty=1}
+function col3(){if(!mB)return;mB.color.set(S.c1);mR.color.set(S.c2);dirty=1}
+async function init3(){if(started)return;started=1;const v=$('#v3');
+ try{const t=document.createElement('canvas');if(!(t.getContext('webgl')||t.getContext('experimental-webgl')))throw 0;
+  await new Promise((a,b)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';s.onload=a;s.onerror=b;document.head.appendChild(s)});
+  R=new THREE.WebGLRenderer({antialias:true,alpha:true});R.setPixelRatio(Math.min(devicePixelRatio,2));v.appendChild(R.domElement);
+  sc=new THREE.Scene();cam=new THREE.PerspectiveCamera(35,1,.1,2000);pv=new THREE.Group();inn=new THREE.Group();pv.add(inn);sc.add(pv);
+  sc.add(new THREE.HemisphereLight(0xffffff,0x888899,.85));const dl=new THREE.DirectionalLight(0xffffff,.9);dl.position.set(40,60,80);sc.add(dl);
+  mB=new THREE.MeshStandardMaterial({roughness:.55});mR=new THREE.MeshStandardMaterial({roughness:.55});col3();
+  const el=R.domElement;el.style.touchAction='none';let dr;
+  el.onpointerdown=e=>{dr=[e.clientX,e.clientY];el.setPointerCapture(e.pointerId)};
+  el.onpointermove=e=>{if(!dr)return;pv.rotation.y+=(e.clientX-dr[0])*.01;pv.rotation.x=Math.max(-1.5,Math.min(1.5,pv.rotation.x+(e.clientY-dr[1])*.01));dr=[e.clientX,e.clientY];dirty=1};
+  el.onpointerup=el.onpointercancel=()=>{dr=null};
+  el.onwheel=e=>{e.preventDefault();cam.position.z*=e.deltaY>0?1.08:.92;dirty=1};
+  new ResizeObserver(size3).observe(v);size3();$('#v3msg').hidden=true;
+  (function loop(){if(dirty&&vis&&!document.hidden){R.render(sc,cam);dirty=0}requestAnimationFrame(loop)})();
+  if(S.m)show3(S.m)}
+ catch(e){$('#v3msg').textContent='Tu navegador no puede mostrar la vista 3D, pero las descargas funcionan igual.'}}
+function show3(m){if(!R)return;[...inn.children].forEach(o=>{o.geometry.dispose();inn.remove(o)});
+ const mk=(a,mt)=>{const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(new Float32Array(a),3));g.computeVertexNormals();return new THREE.Mesh(g,mt)};
+ const b=mk(m.bs,mB),r=mk(m.rl,mR),c=m.mn.map((x,i)=>(x+m.mx[i])/2);b.position.set(-c[0],-c[1],-c[2]);r.position.copy(b.position);inn.add(b,r);
+ if(m.fmt!==lastF){lastF=m.fmt;const sz=Math.max(m.mx[0]-m.mn[0],m.mx[1]-m.mn[1],m.mx[2]-m.mn[2]),s=m.fmt==='soporte';
+  cam.position.set(0,0,sz*2.3);inn.rotation.x=s?-Math.PI/2:0;pv.rotation.set(s?.5:.3,s?-.6:-.35,0)}
+ dirty=1;vis=1}
+/* ---------- orquestación ---------- */
+let tm,pend,gen=0;
+function go(full){pend=pend||full;clearTimeout(tm);tm=setTimeout(async()=>{const f=pend;pend=0;safe(draw2d);col3();warn();if(!f&&S.m)return;const g=++gen;
+ try{const m=await model();if(g!==gen)return;S.m=m;show3(m)}catch(e){console.error(e)}},130)}
+async function ctr(src){S.img=S.sil='';
+ if(src)try{const im=new Image();im.src=src;await im.decode();const k=160/Math.max(im.width,im.height),w=Math.max(1,Math.round(im.width*k)),h=Math.max(1,Math.round(im.height*k)),c=document.createElement('canvas');c.width=w;c.height=h;
+  const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(im,0,0,w,h);const d=x.getImageData(0,0,w,h),o=x.createImageData(w,h);let tr=0;
+  for(let i=3;i<d.data.length;i+=4)if(d.data[i]<10)tr++;const al=tr/(w*h)>.04;
+  for(let i=0;i<d.data.length;i+=4){const a=d.data[i+3],l=.3*d.data[i]+.59*d.data[i+1]+.11*d.data[i+2];if(al?a>128:(a>128&&l<140))o.data[i+3]=255}
+  x.putImageData(o,0,0);S.img=src;S.sil=c.toDataURL()}catch(e){console.error(e)}
+ go(1)}
+function emo(e){const c=document.createElement('canvas');c.width=c.height=160;const x=c.getContext('2d');x.font='120px serif';x.textAlign='center';x.textBaseline='middle';x.fillText(e,80,88);return c.toDataURL()}
+function pressed(box,att,val){box.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset[att]===val))}
+function slug(){let s=S.k==='wifi'?'wifi':payload().replace(/^[a-z]+:\/\//i,'').replace(/^www\./,'').split(/[/?#]/)[0];return(s.replace(/[^a-z0-9]+/gi,'-').replace(/^-|-$/g,'').toLowerCase()||'qr').slice(0,30)}
+function save(b,n){const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=n;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4e3);
+ setTimeout(()=>{const p=$('#pop');if(p.showModal&&!p.open)p.showModal()},350)}
+async function dl(kind){const btn=$('#d'+kind),t=btn.textContent;btn.disabled=true;
+ try{if(kind==='png')save(await new QRCodeStyling(opts(1024,'canvas')).getRawData('png'),'qr-'+slug()+'.png');
+  else if(kind==='svg')save(await new QRCodeStyling(opts(1024,'svg')).getRawData('svg'),'qr-'+slug()+'.svg');
+  else{const m=await model(),nm='qr3d-'+slug()+'-'+S.fmt;
+   if(kind==='3mf')save(to3mf(m),nm+'.3mf');
+   else save(zip([{n:'base.stl',d:stl(m.bs,m.mn)},{n:'relieve-qr.stl',d:stl(m.rl,m.mn)},{n:'LEEME.txt',d:new TextEncoder().encode('Importa base.stl y relieve-qr.stl a la vez, colocalos en la misma posicion y asigna un filamento a cada uno.\n')}]),nm+'-stl.zip')}}
+ catch(e){console.error(e);alert('No se pudo generar el archivo. Prueba con un enlace más corto.')}
+ btn.disabled=false;btn.textContent=t}
+function init(){
+ if(!window.QRCodeStyling){$('#v3msg').textContent='No se pudo cargar el motor del QR. Revisa tu conexión y recarga la página.';return}
+ $('#kind').onclick=e=>{const k=e.target.dataset.k;if(!k)return;S.k=k;pressed($('#kind'),'k',k);$('#fu').hidden=k==='wifi';$('#fw').hidden=k!=='wifi';go(1)};
+ $('#sty').onclick=e=>{const s=e.target.dataset.s;if(!s)return;S.style=s;pressed($('#sty'),'s',s);go(1)};
+ $('#fmt').onclick=e=>{const f=e.target.dataset.f;if(!f)return;S.fmt=f;pressed($('#fmt'),'f',f);go(1)};
+ $('#emj').onclick=e=>{const b=e.target.closest('button');if(!b)return;pressed($('#emj'),'e',b.dataset.e);$('#emo').value='';ctr(b.dataset.e?emo(b.dataset.e):'')};
+ $('#emo').oninput=e=>{pressed($('#emj'),'e','__');ctr(e.target.value.trim()?emo(e.target.value.trim()):'')};
+ $('#lgb').onclick=()=>$('#lgf').click();
+ $('#lgf').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{pressed($('#emj'),'e','__');ctr(r.result)};r.readAsDataURL(f)};
+ ['url','ssid','pass','txt'].forEach(i=>$('#'+i).oninput=()=>go(1));
+ $('#c1').oninput=e=>{S.c1=e.target.value;go(0)};$('#c2').oninput=e=>{S.c2=e.target.value;go(0)};
+ $('#d3mf').onclick=()=>dl('3mf');$('#dpng').onclick=()=>dl('png');$('#dsvg').onclick=()=>dl('svg');$('#dstl').onclick=()=>dl('stl');
+ const pop=$('#pop');$('#pox').onclick=$('#poc').onclick=()=>pop.close();pop.onclick=e=>{if(e.target===pop)pop.close()};
+ $('#tox').onclick=()=>{$('#toast').hidden=true;safe(()=>sessionStorage.setItem('qr3dToast','1'))};
+ setTimeout(()=>{if(!safe(()=>sessionStorage.getItem('qr3dToast')))$('#toast').hidden=false},6000);
+ const kick=()=>{if(innerHeight>0&&!document.hidden)safe(init3)};
+ if('IntersectionObserver'in window)new IntersectionObserver(es=>{if(es[0].isIntersecting)kick()},{rootMargin:'200px'}).observe($('#v3'));else kick();
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)kick()});
+ go(1)}
+document.addEventListener('DOMContentLoaded',()=>safe(init));
+})();
+</script>
+</body>
+</html>
